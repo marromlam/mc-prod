@@ -2,11 +2,11 @@ rule boole_run2:
   input:
     sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}/{bunch}.sim'
   output:
-    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag,[A-Za-z0-9@]+}_G{gaussversion}_B{booleversion}/{bunch}.digi',
-    job = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag,[A-Za-z0-9@]+}_G{gaussversion}_B{booleversion}/{bunch}.py',
-    runner = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag,[A-Za-z0-9@]+}_G{gaussversion}_B{booleversion}/{bunch}.sh'
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}/{bunch}.digi',
+    job = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}/{bunch}.py',
+    runner = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}/{bunch}.sh'
   log:
-    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag,[A-Za-z0-9@]+}_{gaussversion}_{booleversion}/{bunch}.log'
+    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_{gaussversion}_{booleversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
     t = Template(open('boole/job.py').read())
@@ -26,12 +26,4 @@ rule boole_run2:
           DECFILESROOT=f"{DECFILESROOT}"
       )))
     # run simulation
-    try:
-      shell(f"(time env -i bash --noprofile --norc {output.runner}) &> {log}")
-    except:
-      print(f"\n\n{80*'='}")
-      print("Simulation BOOLE failed! See the LOG")
-      print(f"{80*'='}\n")
-      shell(f"cat {log}")
-      print(f"\n\n{80*'='}\n")
-      shell(f"touch {output.sample}")
+    shell(f"(time env -i bash --noprofile --norc {output.runner}) &> {log}")
