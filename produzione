@@ -1,0 +1,17 @@
+echo "================================================================================"
+echo "==                                                                            =="
+echo "==                            MC private production                           =="
+echo "==                                                                            =="
+
+echo "==  -> source LbEnv from cvmfs                                                =="
+source /cvmfs/lhcb.cern.ch/lib/LbEnv
+
+echo "==  -> set platform to x86_64-slc6-gcc49-opt                                  =="
+lb-set-platform x86_64-slc6-gcc49-opt
+
+echo "==                                                                            =="
+echo "==                                                                            =="
+echo "==                            developed in Sardinia                           =="
+echo "================================================================================"
+
+lb-conda default snakemake "$@"
