@@ -1,0 +1,17 @@
+rule brunel:
+  input:
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_moore{mooreversion}HLT2_boole{booleversion}_gauss{gaussversion}/{bunch}.sim'
+  output:
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag,[A-Za-z0-9@]+}_brunel{brunelversion}_moore{mooreversion}HLT2_{booleversion}_gauss{gaussversion}/{bunch}.sim'
+  run:
+    print("source /cvmfs/lhcb.cern.ch/lib/LbLogin.sh -c x86_64-slc6-gcc49-opt")
+    print(f"""lb-run Brunel/{wildcards.brunelversion} gaudirun.py \
+    {APPCONFIGOPTS}/Brunel/DataType-{wildcards.year}.py \
+    {APPCONFIGOPTS}/Brunel/MC-WithTruth.py \
+    {APPCONFIGOPTS}/Brunel/SplitRawEventOutput.4.3.py \
+    {APPCONFIGOPTS}/Persistency/Compression-ZLIB-1.py \
+    {myworkdir}/Brunel-{wildcards.year}.py \
+    {myworkdir}/Tags.py
+    """)
+    shell(f"touch {output.sample}")
+

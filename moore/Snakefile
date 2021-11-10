@@ -1,0 +1,56 @@
+rule mooreL0:
+  input:
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_boole{booleversion}_gauss{gaussversion}/{bunch}.sim'
+  output:
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag,[A-Za-z0-9@]+}_moore{mooreversion}L0_boole{booleversion}_gauss{gaussversion}/{bunch}.sim'
+  run:
+    print("source /cvmfs/lhcb.cern.ch/lib/LbLogin.sh -c x86_64-slc6-gcc49-opt")
+    print(f""" lb-run Moore/{wildcards.mooreversion} gaudirun.py \
+    {APPCONFIGOPTS}/L0App/L0AppSimProduction.py \
+    {APPCONFIGOPTS}/L0App/L0AppTCK-0x160F.py \
+    {APPCONFIGOPTS}/L0App/ForceLUTVersionV8.py \
+    {APPCONFIGOPTS}/L0App/DataType-{wildcards.year}.py \
+    {APPCONFIGOPTS}/Persistency/Compression-ZLIB-1.py \
+    {myworkdir}/MooreL0-{wildcards.year}.py \
+    {myworkdir}/Tags.py
+    """)
+    shell(f"touch {output.sample}")
+
+
+rule mooreHLT1:
+  input:
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_moore{mooreversion}L0_boole{booleversion}_gauss{gaussversion}/{bunch}.sim'
+  output:
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag,[A-Za-z0-9@]+}_moore{mooreversion}HLT1_{booleversion}_gauss{gaussversion}/{bunch}.sim'
+  run:
+    print("source /cvmfs/lhcb.cern.ch/lib/LbLogin.sh -c x86_64-slc6-gcc49-opt")
+    print(f""" lb-run Moore/{wildcards.mooreversion} gaudirun.py \
+    {APPCONFIGOPTS}/Moore/MooreSimProductionForSeparateL0AppStep2015.py \
+    {APPCONFIGOPTS}/Conditions/TCK-0x5138160F.py \
+    {APPCONFIGOPTS}/Moore/MooreSimProductionHlt1.py \
+    {APPCONFIGOPTS}/L0App/DataType-{wildcards.year}.py \
+    {APPCONFIGOPTS}/Persistency/Compression-ZLIB-1.py \
+    {myworkdir}/MooreL1-{wildcards.year}.py \
+    {myworkdir}/Tags.py
+    """)
+    shell(f"touch {output.sample}")
+
+
+rule mooreHLT2:
+  input:
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_moore{mooreversion}HLT1_boole{booleversion}_gauss{gaussversion}/{bunch}.sim'
+  output:
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag,[A-Za-z0-9@]+}_moore{mooreversion}HLT2_{booleversion}_gauss{gaussversion}/{bunch}.sim'
+  run:
+    print("source /cvmfs/lhcb.cern.ch/lib/LbLogin.sh -c x86_64-slc6-gcc49-opt")
+    print(f""" lb-run Moore/{wildcards.mooreversion} gaudirun.py \
+    {APPCONFIGOPTS}/Moore/MooreSimProductionForSeparateL0AppStep2015.py \
+    {APPCONFIGOPTS}/Conditions/TCK-0x6139160F.py \
+    {APPCONFIGOPTS}/Moore/MooreSimProductionHlt2.py \
+    {APPCONFIGOPTS}/L0App/DataType-{wildcards.year}.py \
+    {APPCONFIGOPTS}/Persistency/Compression-ZLIB-1.py \
+    {myworkdir}/MooreL2-{wildcards.year}.py \
+    {myworkdir}/Tags.py
+    """)
+    shell(f"touch {output.sample}")
+

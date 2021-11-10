@@ -1,0 +1,16 @@
+rule davinci:
+  input:
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_brunel{brunelversion}_moore{mooreversion}HLT2_boole{booleversion}_gauss{gaussversion}/{bunch}.sim'
+  output:
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag,[A-Za-z0-9@]+}_davinci{davinciversion}_brunel{brunelversion}_moore{mooreversion}HLT2_{booleversion}_gauss{gaussversion}/{bunch}.sim'
+  run:
+    print("source /cvmfs/lhcb.cern.ch/lib/LbLogin.sh -c x86_64-slc6-gcc49-opt")
+    print(f"""lb-run DaVinci/{wildcards.davinciversion} gaudirun.py \
+    {APPCONFIGOPTS}/DaVinci/DV-Stripping28r2-Stripping-MC-NoPrescaling-DST.py \
+    {APPCONFIGOPTS}/DaVinci/DV-RedoCaloPID-Stripping_28_24.py \
+    {APPCONFIGOPTS}/DaVinci/DataType-{wildcards.year}.py \
+    {APPCONFIGOPTS}/DaVinci/InputType-DST.py \
+    {APPCONFIGOPTS}/DaVinci/DV-RawEventJuggler-4_3-to-4_3.py \
+    {myworkdir}/DaVinci-{wildcards.year}.py
+    """)
+    shell(f"touch {output.sample}")
