@@ -1,0 +1,38 @@
+from string import Template
+import time
+
+
+# path where the simultation will be stored
+SAMPLES = '/scratch47/marcos.romero/mc-private-prod'
+
+
+# configuration
+configfile : "config.yml"
+
+APPCONFIGOPTS = config['some_paths']['APPCONFIGOPTS'].format(
+                    cvmfs=config['some_paths']['CVMFS'],
+                    appconfig_version=config['general']['appconfig_version'])
+DECFILESROOT = config['some_paths']['DECFILESROOT'].format(
+                    cvmfs=config['some_paths']['CVMFS'],
+                    decfiles_version=config['general']['decfiles_version'])
+
+# to control the amount of simultation to be done
+nevts = config['number_of_events']
+nbunchs = config['number_of_bunchs']
+
+# flag and versions onlu contain numbers and letters
+wildcard_constraints:
+    flag = "[A-Za-z0-9@]+",
+    gaussversion = "[A-Za-z0-9@]+",
+    booleversion = "[A-Za-z0-9@]+",
+    mooreversion = "[A-Za-z0-9@]+",
+    brunelversion = "[A-Za-z0-9@]+",
+    davinciversion = "[A-Za-z0-9@]+"
+
+
+# include different Snakefiles for each part of the Simulation
+include: "gauss/Snakefile"
+include: "boole/Snakefile"
+include: "moore/Snakefile"
+include: "brunel/Snakefile"
+include: "davinci/Snakefile"
