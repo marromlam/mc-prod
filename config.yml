@@ -8,7 +8,7 @@ some_paths:
   DECFILESROOT : "{cvmfs}/DBASE/Gen/DecFiles/{decfiles_version}"
 
 general:
-  decfiles_version: 'v30r55'
+  decfiles_version: 'v30r66'
   appconfig_version: 'v3r403'
 
 general_config: &general_config
