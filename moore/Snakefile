@@ -4,9 +4,9 @@ rule moore0_run2:
   output:
     sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M0{mooreversion}/{bunch}.digi',
   log:
-    job = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M0{mooreversion}/{bunch}.py',
+    job =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M0{mooreversion}/{bunch}.py',
     runner = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M0{mooreversion}/{bunch}.sh',
-    log = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_{gaussversion}_{booleversion}_M0{mooreversion}/{bunch}.log'
+    log =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M0{mooreversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
     t = Template(open('moore/level0_job.py').read())
@@ -35,9 +35,9 @@ rule moore1_run2:
   output:
     sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M1{mooreversion}/{bunch}.digi',
   log:
+    job =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M1{mooreversion}/{bunch}.py',
     runner = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M1{mooreversion}/{bunch}.sh',
-    job = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M1{mooreversion}/{bunch}.py',
-    log = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_{gaussversion}_{booleversion}_M1{mooreversion}/{bunch}.log'
+    log =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M1{mooreversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
     t = Template(open('moore/hlt_job.py').read())
@@ -66,9 +66,9 @@ rule moore2_run2:
   output:
     sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}/{bunch}.digi',
   log:
-    job = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}/{bunch}.py',
+    job =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}/{bunch}.py',
     runner = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}/{bunch}.sh',
-    log = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_{gaussversion}_{booleversion}_M2{mooreversion}/{bunch}.log'
+    log =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
     t = Template(open('moore/hlt_job.py').read())
