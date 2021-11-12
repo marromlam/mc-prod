@@ -9,7 +9,7 @@ rule moore0_run2:
     log = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_{gaussversion}_{booleversion}_M0{mooreversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
-    t = Template(open('moore/job.py').read())
+    t = Template(open('moore/level0_job.py').read())
     with open(f"{log.job}", "w") as job:
       job.write(t.substitute(dict(
           input_file=f'{input.sample}',
@@ -40,7 +40,7 @@ rule moore1_run2:
     log = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_{gaussversion}_{booleversion}_M1{mooreversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
-    t = Template(open('moore/job.py').read())
+    t = Template(open('moore/hlt_job.py').read())
     with open(f"{log.job}", "w") as job:
       job.write(t.substitute(dict(
           input_file=f'{input.sample}',
@@ -71,7 +71,7 @@ rule moore2_run2:
     log = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_{gaussversion}_{booleversion}_M2{mooreversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
-    t = Template(open('moore/job.py').read())
+    t = Template(open('moore/hlt_job.py').read())
     with open(f"{log.job}", "w") as job:
       job.write(t.substitute(dict(
           input_file=f'{input.sample}',
