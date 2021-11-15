@@ -9,14 +9,14 @@ rule moore0_run2:
     log =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M0{mooreversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
-    t = Template(open('moore/level0_job.py').read())
+    t = Template(open('gaudi/moore/level0_job.py').read())
     with open(f"{log.job}", "w") as job:
       job.write(t.substitute(dict(
           input_file=f'{input.sample}',
           output_file=f'{output.sample}'
       )))
     # create bash file to run Gauss from template
-    t = Template(open('moore/L0runner.sh').read())
+    t = Template(open('gaudi/moore/L0runner.sh').read())
     with open(f"{log.runner}", "w") as job:
       job.write(t.substitute(dict(
           MOORE_VERSION=f'{wildcards.mooreversion}',
@@ -40,14 +40,14 @@ rule moore1_run2:
     log =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M1{mooreversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
-    t = Template(open('moore/hlt_job.py').read())
+    t = Template(open('gaudi/moore/hlt_job.py').read())
     with open(f"{log.job}", "w") as job:
       job.write(t.substitute(dict(
           input_file=f'{input.sample}',
           output_file=f'{output.sample}'
       )))
     # create bash file to run Gauss from template
-    t = Template(open('moore/HLT1runner.sh').read())
+    t = Template(open('gaudi/moore/HLT1runner.sh').read())
     with open(f"{log.runner}", "w") as job:
       job.write(t.substitute(dict(
           MOORE_VERSION=f'{wildcards.mooreversion}',
@@ -71,14 +71,14 @@ rule moore2_run2:
     log =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
-    t = Template(open('moore/hlt_job.py').read())
+    t = Template(open('gaudi/moore/hlt_job.py').read())
     with open(f"{log.job}", "w") as job:
       job.write(t.substitute(dict(
           input_file=f'{input.sample}',
           output_file=f'{output.sample}'
       )))
     # create bash file to run Gauss from template
-    t = Template(open('moore/HLT2runner.sh').read())
+    t = Template(open('gaudi/moore/HLT2runner.sh').read())
     with open(f"{log.runner}", "w") as job:
       job.write(t.substitute(dict(
           MOORE_VERSION=f'{wildcards.mooreversion}',

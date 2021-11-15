@@ -8,5 +8,5 @@ ${APPCONFIGOPTS}/Boole/DataType-${YEAR}.py \
 ${APPCONFIGOPTS}/Boole/Boole-SetOdinRndTrigger.py \
 ${APPCONFIGOPTS}/Persistency/Compression-ZLIB-1.py \
 ${JOB_FILE} \
-Tags.py
+gaudi/Tags.py
 

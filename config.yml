@@ -16,13 +16,17 @@ general_config: &general_config
   appconfig_version: 'v3r403'
 
 2015:
-   <<: *general_config 
+  <<: *general_config 
+  stripping_version: '28r2'
 
 2016:
-   <<: *general_config 
+  <<: *general_config 
+  stripping_version: '28r2'
 
 2017:
-   <<: *general_config 
+  <<: *general_config 
+  stripping_version: '28r2'
 
 2018:
-   <<: *general_config 
+  <<: *general_config 
+  stripping_version: '28r2'

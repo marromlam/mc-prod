@@ -7,13 +7,13 @@ rule gauss_run2:
     SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
-    t = Template(open('gauss/job.py').read())
+    t = Template(open('gaudi/gauss/job.py').read())
     with open(f"{output.job}", "w") as job:
       job.write(t.substitute(dict(
           sim_file=f'{output.sample}',
           number_of_events=f"{nevts}")))
     # create bash file to run Gauss from template
-    t = Template(open('gauss/runner.sh').read())
+    t = Template(open('gaudi/gauss/runner.sh').read())
     with open(f"{output.runner}", "w") as job:
       job.write(t.substitute(dict(
           GAUSS_VERSION=f'{wildcards.gaussversion}',

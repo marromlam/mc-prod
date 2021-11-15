@@ -6,5 +6,5 @@ lb-run Brunel/${BRUNEL_VERSION} gaudirun.py ${APPCONFIGOPTS}/Brunel/DataType-${Y
                                ${APPCONFIGOPTS}/Brunel/SplitRawEventOutput.4.3.py \
                                ${APPCONFIGOPTS}/Persistency/Compression-ZLIB-1.py \
                                ${JOB_FILE} \
-                               Tags.py
+                               gaudi/Tags.py
 

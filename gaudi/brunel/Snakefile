@@ -9,7 +9,7 @@ rule brunel_run2:
     log =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
-    t = Template(open('brunel/job.py').read())
+    t = Template(open('gaudi/brunel/job.py').read())
     with open(f"{log.job}", "w") as job:
       job.write(t.substitute(dict(
           input_file=f'{input.sample}',
@@ -17,7 +17,7 @@ rule brunel_run2:
           year=f'{wildcards.year}'
       )))
     # create bash file to run Gauss from template
-    t = Template(open('brunel/runner.sh').read())
+    t = Template(open('gaudi/brunel/runner.sh').read())
     with open(f"{log.runner}", "w") as job:
       job.write(t.substitute(dict(
           BRUNEL_VERSION=f'{wildcards.brunelversion}',

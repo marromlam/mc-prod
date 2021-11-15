@@ -9,14 +9,14 @@ rule boole_run2:
     SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_{gaussversion}_{booleversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
-    t = Template(open('boole/job.py').read())
+    t = Template(open('gaudi/boole/job.py').read())
     with open(f"{output.job}", "w") as job:
       job.write(t.substitute(dict(
           input_file=f'{input.sample}',
           output_file=f'{output.sample}'
       )))
     # create bash file to run Gauss from template
-    t = Template(open('boole/runner.sh').read())
+    t = Template(open('gaudi/boole/runner.sh').read())
     with open(f"{output.runner}", "w") as job:
       job.write(t.substitute(dict(
           BOOLE_VERSION=f'{wildcards.booleversion}',
