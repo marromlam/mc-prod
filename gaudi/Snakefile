@@ -1,13 +1,19 @@
+import os, shutil
 from string import Template
 import time
 
 
-# path where the simultation will be stored
-SAMPLES = '/scratch47/marcos.romero/mc-private-prod'
-
 
 # configuration
-configfile : "config.yml"
+configfile : "defaults.yml"
+MC_PROD = config['MC_PROD']
+SAMPLES = config['SAMPLES']
+# print(MC_PROD)
+# print("sanakemake::SAMPLES ==", SAMPLES)
+
+
+# path where the simultation will be stored
+# SAMPLES = '/scratch47/marcos.romero/mc-private-prod'
 
 APPCONFIGOPTS = config['some_paths']['APPCONFIGOPTS'].format(
                     cvmfs=config['some_paths']['CVMFS'],
@@ -23,6 +29,8 @@ nbunchs = config['number_of_bunchs']
 # flag and versions onlu contain numbers and letters
 wildcard_constraints:
     flag = "[A-Za-z0-9@]+",
+    ext = "(dst|mdst|ldst)",
+    eventtype = "[0-9]+",
     gaussversion = "[A-Za-z0-9@]+",
     booleversion = "[A-Za-z0-9@]+",
     mooreversion = "[A-Za-z0-9@]+",
