@@ -3,4 +3,6 @@
 *.root
 *.xml
 
+user.yml
+
 */__pycache__

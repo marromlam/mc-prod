@@ -50,26 +50,29 @@ def bottom_line(width=80, title=None):
   ans = _topbottom_line(width, title, 'bottom')
   return ans
 
-
-print(top_line(80))
-print(fill_line('MC private production', 80))
-print(bottom_line(80))
-
-for c in ['general']:
-  print(4*" ", top_line(70, f"{c.upper()}"))
-  for k,v in CONF[c].items():
-    print(4*" ", fill_line(f"{k:>20} : {v}", 70))
-  print(4*" ",bottom_line(70))
-
-for y in years:
-  print(4*" ", top_line(70, f"{y}"))
-  for k,v in CONF[y].items():
-    print(4*" ", fill_line(f"{k:>20} : {v}", 70))
+def display_config(conf):
+  print(top_line(80))
+  print(fill_line('MC private production', 80))
+  print(bottom_line(80))
+  
+  for c in ['general']:
+    print(4*" ", top_line(70, f"{c.upper()}"))
+    for k,v in conf[c].items():
+      print(4*" ", fill_line(f"{k:>20} : {v}", 70))
+    print(4*" ",bottom_line(70))
+  
+  for y in years:
+    print(4*" ", top_line(70, f"{y}"))
+    for k,v in conf[y].items():
+      print(4*" ", fill_line(f"{k:>20} : {v}", 70))
+    print(4*" ", bottom_line(70))
+  
+  print(4*" ", top_line(70, f"Statistics"))
+  for y in ['number_of_events', 'number_of_bunchs']:
+      print(4*" ", fill_line(f"{y:>20} : {conf[y]}", 70))
   print(4*" ", bottom_line(70))
+  
+  print(bottom_line(80, 'developed in Sardinia'))
 
-print(4*" ", top_line(70, f"Statistics"))
-for y in ['number_of_events', 'number_of_bunchs']:
-    print(4*" ", fill_line(f"{y:>20} : {CONF[y]}", 70))
-print(4*" ", bottom_line(70))
 
-print(bottom_line(80, 'developed in Sardinia'))
+display_config(CONF)
