@@ -9,7 +9,6 @@ export MC_PROD=$SCRIPTPATH
 # From filename we are going to extract the path of the production
 # First we start by splitting the filename by slashes
 SAMPLE_ARRAY=($(echo $1 | tr '/' "\n"))
-echo $SAMPLE_ARRAY
 # We comput the lengh of the previuous array
 LENGHT_ARRAY=${#SAMPLE_ARRAY[@]}; 
 # we know the last 5 elements handle EventType, Magnet and versions
