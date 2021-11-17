@@ -1,20 +1,32 @@
-#!/bin/bash
-echo "================================================================================"
-echo "==                                                                            =="
-echo "==                            MC private production                           =="
-echo "==                                                                            =="
+#!/bin/bash 
 
-echo "==  -> source LbEnv from cvmfs                                                =="
+# Absolute path to this script, e.g. /home/user/bin/foo.sh
+SCRIPT=$(readlink -f "$0")
+# Absolute path this script is in, thus /home/user/bin
+SCRIPTPATH=$(dirname "$SCRIPT")
+export MC_PROD=$SCRIPTPATH
+
+# From filename we are going to extract the path of the production
+# First we start by splitting the filename by slashes
+SAMPLE_ARRAY=($(echo $1 | tr '/' "\n"))
+echo $SAMPLE_ARRAY
+# We comput the lengh of the previuous array
+LENGHT_ARRAY=${#SAMPLE_ARRAY[@]}; 
+# we know the last 5 elements handle EventType, Magnet and versions
+LENGHT_OFFSET=5
+# thus we know which elements are from SAMPLES
+LAST_ELEMENT=$(expr $LENGHT_ARRAY - $LENGHT_OFFSET)
+# We concatenate the elements
+SAMPLES=`echo "${SAMPLE_ARRAY[@]:0:$LAST_ELEMENT}"`
+SAMPLES="/${SAMPLES// //}"
+# echo "samples - " "$SAMPLES"
+
+
 source /cvmfs/lhcb.cern.ch/lib/LbEnv.sh
-
-echo "==  -> set platform to x86_64-slc6-gcc49-opt                                  =="
 # lb-set-platform x86_64-slc6-gcc49-opt;
-
-echo "==                                                                            =="
-echo "==                                                                            =="
-echo "==                            developed in Sardinia                           =="
-echo "================================================================================"
-
-lb-conda default snakemake "$@" -s gaudi/Snakefile
+# display config
+lb-conda default python tools/print_conf.py
+# run snakemake from lb-conda
+lb-conda default snakemake "$@" -s gaudi/Snakefile --config MC_PROD=$SCRIPTPATH SAMPLES=$SAMPLES
 
 # vim:filetype=sh
