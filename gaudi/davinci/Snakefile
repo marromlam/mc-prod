@@ -32,7 +32,7 @@ rule davinci_run2:
       )))
     # run simulation
     shell(f"(time env -i bash --noprofile --norc {log.runner}) &> {log.log}")
-    sb = f"{output.sandbox}"
+    sb = f"{log.sandbox}"
     st = [f for f in os.listdir(sb) if f.endswith(f'.{wildcards.ext}')]
     if len(st) > 1:
         print(st)
