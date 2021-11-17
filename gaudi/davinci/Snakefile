@@ -46,30 +46,35 @@ rule davinci_create_tuple:
   input:
     sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.dst',
   output:
-    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.root',
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}_S{strippingline}/{bunch}.root',
   log:
-    job =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.py',
-    runner = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.sh',
-    log =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.log'
+    job =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}_S{strippingline}/{bunch}.py',
+    runner = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}_S{strippingline}/{bunch}.sh',
+    sandbox = directory(SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}_S{strippingline}/{bunch}_sandbox'),
+    log =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}_S{strippingline}/{bunch}.log'
   run:
     _conf = config[int(f"{wildcards.year}")]
     # create job file for gaudirun from template
-    t = Template(open('gaudi/davinci/job.py').read())
+    t = Template(open(_conf['tuple_job']).read())
     with open(f"{log.job}", "w") as job:
       job.write(t.substitute(dict(
           input_file=f'{input.sample}',
           output_file=f'{output.sample}',
-          year=f'{wildcards.year}'
+          year=f'{wildcards.year}',
+          strippingline=f'{wildcards.strippingline}',
+          extension=f'dst'
       )))
     # create bash file to run Gauss from template
-    t = Template(open(_conf['tuple_job']).read())
+    t = Template(open('gaudi/davinci/stripper.sh').read())
     with open(f"{log.runner}", "w") as job:
       job.write(t.substitute(dict(
           DAVINCI_VERSION=f'{wildcards.davinciversion}',
           YEAR=f"{wildcards.year}",
           JOB_FILE=f"{log.job}",
           APPCONFIGOPTS=f"{APPCONFIGOPTS}",
-          STRIPPING_VERSION=_conf['stripping_version']
+          STRIPPING_VERSION=_conf['stripping_version'],
+          SANDBOX=f"{log.sandbox}",
+          MC_PROD=f"{MC_PROD}"
       )))
     # run simulation
     shell(f"(time env -i bash --noprofile --norc {log.runner}) &> {log.log}")
