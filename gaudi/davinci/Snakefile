@@ -1,15 +1,17 @@
 rule davinci_run2:
   input:
-    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}/{bunch}.dst'
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}/{bunch}.{ext}'
   output:
-    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.dst',
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.{ext}',
   log:
-    job =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.py',
-    runner = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.sh',
-    log =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.log'
+    job =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}{ext}.py',
+    runner = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}{ext}.sh',
+    sandbox = directory(SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}{ext}_sandbox'),
+    log =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}{ext}.log'
   run:
+    _conf = config[int(f"{wildcards.year}")]
     # create job file for gaudirun from template
-    t = Template(open('gaudi/davinci/job.py').read())
+    t = Template(open(_conf['davinci_job']).read())
     with open(f"{log.job}", "w") as job:
       job.write(t.substitute(dict(
           input_file=f'{input.sample}',
@@ -24,7 +26,50 @@ rule davinci_run2:
           YEAR=f"{wildcards.year}",
           JOB_FILE=f"{log.job}",
           APPCONFIGOPTS=f"{APPCONFIGOPTS}",
-          STRIPPING_VERSION=config[f"{wildcards.year}"]['stripping_version']
+          STRIPPING_VERSION=config[int(f"{wildcards.year}")]['stripping_version'],
+          SANDBOX=f"{log.sandbox}",
+          MC_PROD=f"{MC_PROD}"
+      )))
+    # run simulation
+    shell(f"(time env -i bash --noprofile --norc {log.runner}) &> {log.log}")
+    sb = f"{output.sandbox}"
+    st = [f for f in os.listdir(sb) if f.endswith(f'.{wildcards.ext}')]
+    if len(st) > 1:
+        print(st)
+    else:
+        shutil.move(os.path.join(sb,st[0]), f"{output.sample}" )
+
+
+
+
+rule davinci_create_tuple:
+  input:
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.dst',
+  output:
+    sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.root',
+  log:
+    job =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.py',
+    runner = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.sh',
+    log =    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}/{bunch}.log'
+  run:
+    _conf = config[int(f"{wildcards.year}")]
+    # create job file for gaudirun from template
+    t = Template(open('gaudi/davinci/job.py').read())
+    with open(f"{log.job}", "w") as job:
+      job.write(t.substitute(dict(
+          input_file=f'{input.sample}',
+          output_file=f'{output.sample}',
+          year=f'{wildcards.year}'
+      )))
+    # create bash file to run Gauss from template
+    t = Template(open(_conf['tuple_job']).read())
+    with open(f"{log.runner}", "w") as job:
+      job.write(t.substitute(dict(
+          DAVINCI_VERSION=f'{wildcards.davinciversion}',
+          YEAR=f"{wildcards.year}",
+          JOB_FILE=f"{log.job}",
+          APPCONFIGOPTS=f"{APPCONFIGOPTS}",
+          STRIPPING_VERSION=_conf['stripping_version']
       )))
     # run simulation
     shell(f"(time env -i bash --noprofile --norc {log.runner}) &> {log.log}")
