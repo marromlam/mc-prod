@@ -1,20 +1,23 @@
 import os, shutil
 from string import Template
 import time
-
+import yaml
 
 
 # configuration
 configfile : "defaults.yml"
+try:
+  with open(r'user.yml') as file:
+    _config = yaml.load(file, Loader=yaml.FullLoader)
+  for __config in config:
+    if __config in _config:
+        config[__config] = _config[__config]
+except:
+  pass
+
+
 MC_PROD = config['MC_PROD']
 SAMPLES = config['SAMPLES']
-# print(MC_PROD)
-# print("sanakemake::SAMPLES ==", SAMPLES)
-
-
-# path where the simultation will be stored
-# SAMPLES = '/scratch47/marcos.romero/mc-private-prod'
-
 APPCONFIGOPTS = config['some_paths']['APPCONFIGOPTS'].format(
                     cvmfs=config['some_paths']['CVMFS'],
                     appconfig_version=config['general']['appconfig_version'])
