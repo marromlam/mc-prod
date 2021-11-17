@@ -12,8 +12,14 @@ general:
   appconfig_version: 'v3r403'
 
 general_config: &general_config
-  decfiles_version: 'v30r55'
-  appconfig_version: 'v3r403'
+  gauss_job: 'gaudi/gauss/job.py'
+  boole_job: 'gaudi/boole/job.py'
+  moore0_job: 'gaudi/moore/level0_job.py'
+  moore1_job: 'gaudi/moore/hlt_job.py'
+  moore2_job: 'gaudi/moore/hlt_job.py'
+  brunel_job: 'gaudi/brunel/job.py'
+  davinci_job: 'gaudi/davinci/job.py'
+  tuple_job: 'gaudi/davinci/tuple_maker.py'
 
 2015:
   <<: *general_config 
