@@ -3,27 +3,27 @@ rule boole_run2:
     sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}/{bunch}.sim'
   output:
     sample = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}/{bunch}.digi',
-    job = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}/{bunch}.py',
-    runner = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}/{bunch}.sh'
   log:
-    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_{gaussversion}_{booleversion}/{bunch}.log'
+    job = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}/{bunch}.py',
+    runner = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}/{bunch}.sh',
+    log = SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_{gaussversion}_{booleversion}/{bunch}.log'
   run:
     # create job file for gaudirun from template
     t = Template(open('gaudi/boole/job.py').read())
-    with open(f"{output.job}", "w") as job:
+    with open(f"{log.job}", "w") as job:
       job.write(t.substitute(dict(
           input_file=f'{input.sample}',
           output_file=f'{output.sample}'
       )))
     # create bash file to run Gauss from template
     t = Template(open('gaudi/boole/runner.sh').read())
-    with open(f"{output.runner}", "w") as job:
+    with open(f"{log.runner}", "w") as job:
       job.write(t.substitute(dict(
           BOOLE_VERSION=f'{wildcards.booleversion}',
           YEAR=f"{wildcards.year}",
-          JOB_FILE=f"{output.job}",
+          JOB_FILE=f"{log.job}",
           APPCONFIGOPTS=f"{APPCONFIGOPTS}",
           DECFILESROOT=f"{DECFILESROOT}"
       )))
     # run simulation
-    shell(f"(time env -i bash --noprofile --norc {output.runner}) &> {log}")
+    shell(f"(time env -i bash --noprofile --norc {log.runner}) &> {log.log}")
