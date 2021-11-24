@@ -32,6 +32,7 @@ nbunchs = config['number_of_bunchs']
 # flag and versions onlu contain numbers and letters
 wildcard_constraints:
     flag = "[A-Za-z0-9@]+",
+    bunch = "[0-9]+",
     ext = "(dst|mdst|ldst)",
     eventtype = "[0-9]+",
     gaussversion = "[A-Za-z0-9@]+",
@@ -47,3 +48,16 @@ include: "boole/Snakefile"
 include: "moore/Snakefile"
 include: "brunel/Snakefile"
 include: "davinci/Snakefile"
+
+
+rule merge_root:
+  input:
+    expand(SAMPLES + '/{{eventtype}}/{{year}}/{{magnet}}/{{flag}}_G{{gaussversion}}_B{{booleversion}}_M2{{mooreversion}}_B{{brunelversion}}_D{{davinciversion}}_S{{strippingline}}/{bunch}.root',
+           bunch=range(1,config['number_of_bunchs']+1))
+  output:
+    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}_S{strippingline}/tuple.root'
+  log:
+    SAMPLES + '/{eventtype}/{year}/{magnet}/{flag}_G{gaussversion}_B{booleversion}_M2{mooreversion}_B{brunelversion}_D{davinciversion}_S{strippingline}/merging_tuple.log'
+  run:
+    # inputs = " ".join(f"{input}")
+    shell(f"(time hadd {output} {input}) &> {log}")
