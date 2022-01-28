@@ -12,6 +12,7 @@ ${APPCONFIGOPTS}/Gauss/DataType-${YEAR}.py \
 ${APPCONFIGOPTS}/Gauss/RICHRandomHits.py \
 ${DECFILESROOT}/options/${EVENT_TYPE}.py \
 /cvmfs/lhcb.cern.ch/lib/lhcb/GAUSS/GAUSS_${GAUSS_VERSION}/Gen/LbPythia8/options/Pythia8.py \
+# /cvmfs/lhcb.cern.ch/lib/lhcb/GAUSS/GAUSS_${GAUSS_VERSION}/Gen/LbBcVegPy/options/BcVegPyPythia8.py \
 ${APPCONFIGOPTS}/Gauss/G4PL_FTFP_BERT_EmNoCuts.py \
 ${MC_PROD}/gaudi/Tags.py
 
